@@ -1,4 +1,4 @@
-import { DB } from "https://deno.land/x/sqlite/mod.ts"
+import { DB } from "./deps.ts"
 export const db = new DB("./data/tags.sqlite");
 
 export interface Tag {
@@ -46,5 +46,6 @@ export function addTag(guild: string, user: string, name: string, content: strin
 }
 
 if(import.meta.main) {
+    console.log('Initializing DB');
     init();
 }

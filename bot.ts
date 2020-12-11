@@ -1,4 +1,4 @@
-import { Client, Intents, event, slash, Interaction, InteractionResponseType, Embed, SlashCommandPartial, SlashCommandOptionType } from 'https://raw.githubusercontent.com/DjDeveloperr/harmony/slash/mod.ts'
+import { Client, Intents, event, slash, Interaction, InteractionResponseType, ClientOptions, SlashCommandPartial, SlashCommandOptionType } from './deps.ts'
 import { MAX_USER_TAGS, TOKEN } from "./config.ts";
 import { addTag, deleteTag, editTag, getGuildTags, getTag, getUserTags, init } from "./db.ts";
 
@@ -83,15 +83,29 @@ commands.push({
     ]
 })
 
+interface MyClientOptions extends ClientOptions {
+    syncCommands?: boolean
+}
+
 class MyClient extends Client {
+    syncCommands: boolean = false
+
+    constructor(options?: MyClientOptions) {
+        super(options)
+        if(options?.syncCommands === true) this.syncCommands = true
+    }
+
     @event()
     ready() {
-        console.log(`Logged in as ${this.user?.tag}!`)
-        // commands.forEach(cmd => {
-        //     this.slash.commands.create(cmd).then(c => {
-        //         console.log(`Created CMD ${cmd.name}!`)
-        //     }).catch(() => console.log(`Failed to create ${cmd.name}.`))
-        // })
+        console.log(`Logged in as ${this.user?.tag}!`);
+        if (this.syncCommands) {
+            console.log(`Syncing commands...`);
+            commands.forEach(cmd => {
+                this.slash.commands.create(cmd).then(c => {
+                    console.log(`Created CMD ${cmd.name}!`);
+                }).catch(() => console.log(`Failed to create ${cmd.name}.`));
+            });
+        }
     }
 
     @slash()
@@ -222,6 +236,11 @@ class MyClient extends Client {
     }
 }
 
-console.log('Connecting...');
-const client = new MyClient();
-client.connect(TOKEN, Intents.None);
+export const client = new MyClient({
+    syncCommands: true
+});
+
+if (import.meta.main) {
+    console.log(`Connecting...`);
+    client.connect(TOKEN, Intents.None);
+}
