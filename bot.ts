@@ -96,8 +96,8 @@ class MyClient extends Client {
                 temp: true,
             });
 
-        let name = d.data.options.find((e) => e.name == "name")?.value as string;
-        let content = d.data.options.find((e) => e.name == "content")
+        let name = d.options.find((e) => e.name == "name")?.value as string;
+        let content = d.options.find((e) => e.name == "content")
             ?.value as string;
 
         if (content.length > 2000)
@@ -124,8 +124,8 @@ class MyClient extends Client {
 
     @slash()
     updatetag(d: Interaction) {
-        let name = d.data.options.find((e) => e.name == "name")?.value as string;
-        let content = d.data.options.find((e) => e.name == "content")
+        let name = d.options.find((e) => e.name == "name")?.value as string;
+        let content = d.options.find((e) => e.name == "content")
             ?.value as string;
 
         if (content.length > 2000)
@@ -162,7 +162,7 @@ class MyClient extends Client {
 
     @slash()
     deletetag(d: Interaction) {
-        let name = d.data.options.find((e) => e.name == "name")?.value as string;
+        let name = d.options.find((e) => e.name == "name")?.value as string;
         const tag = getTag(d.guild.id, name);
         if (!tag)
             return d.respond({
@@ -190,7 +190,7 @@ class MyClient extends Client {
 
     @slash()
     tag(d: Interaction) {
-        let name = d.data.options.find((e) => e.name == "name")?.value as string;
+        let name = d.options.find((e) => e.name == "name")?.value as string;
         const tag = getTag(d.guild.id, name);
         if (!tag)
             return d.respond({
